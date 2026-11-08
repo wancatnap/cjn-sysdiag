@@ -1,0 +1,140 @@
+<Window x:Class="SysDiag.DlssWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DLSS 模型设置" Height="700" Width="880" MinHeight="580" MinWidth="760"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <StackPanel Grid.Row="0" Margin="24,20,24,10">
+            <TextBlock Text="DLSS 模型设置" Style="{StaticResource PageTitle}" />
+        </StackPanel>
+
+        <!-- 检测状态 -->
+        <Border Grid.Row="1" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1"
+                CornerRadius="10" Margin="24,0,24,0" Padding="14,11">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="GpuText" FontSize="12.5" FontWeight="SemiBold" Foreground="{StaticResource Ink}" />
+                        <Border x:Name="DriverBadge" Background="{StaticResource SuccessSoft}" BorderBrush="{StaticResource Success}" BorderThickness="1"
+                                CornerRadius="7" Padding="7,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="DriverText" FontSize="10" Foreground="{StaticResource Success}" />
+                        </Border>
+                        <Border x:Name="DlssBadge" Background="{StaticResource PrimarySoft}" BorderBrush="{StaticResource PrimaryLine}" BorderThickness="1"
+                                CornerRadius="7" Padding="7,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="DlssText" FontSize="10" Foreground="{StaticResource Primary}" />
+                        </Border>
+                    </StackPanel>
+                    <TextBlock x:Name="GameText" FontSize="10.5" Foreground="{StaticResource InkTertiary}" Margin="0,6,0,0"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock x:Name="SupportText" FontSize="10.5" Foreground="{StaticResource InkTertiary}" Margin="0,3,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="选游戏目录" Style="{StaticResource ToolButton}" Click="OnPickGame" />
+                    <Button Content="重新检测" Style="{StaticResource ToolButton}" Click="OnRefresh" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="2" Margin="24,12,24,0" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <!-- 快捷预设 -->
+                <TextBlock Text="快捷预设方案" FontSize="12.5" FontWeight="SemiBold" Foreground="{StaticResource Ink}"
+                           Margin="2,0,0,8" />
+                <UniformGrid x:Name="PresetGrid" Columns="3" Margin="0,0,0,4" />
+
+                <!-- 模型与细节 -->
+                <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10"
+                        Padding="16,14" Margin="0,12,0,10">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                            <TextBlock Text="模型与细节" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource Ink}" />
+                            <Border Background="{StaticResource WarnSoft}" BorderBrush="{StaticResource Warn}" BorderThickness="1" CornerRadius="7"
+                                    Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="非必需" FontSize="10" Foreground="{StaticResource Warn}" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="预设模型决定抗锯齿与锐化的取舍；档位越靠前越干净，但可能掉帧。"
+                                   FontSize="10.5" Foreground="{StaticResource InkTertiary}" Margin="0,4,0,10" TextWrapping="Wrap" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="DLSS 预设模型" FontSize="10.5" Foreground="{StaticResource InkTertiary}" />
+                                <ComboBox x:Name="PresetCombo" Height="30" Margin="0,5,0,0" FontSize="11.5"
+                                          DisplayMemberPath="Label" SelectionChanged="OnPresetChanged" />
+                                <TextBlock x:Name="PresetHint" FontSize="10" Foreground="{StaticResource Warn}"
+                                           Margin="0,5,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="细节边缘增强" FontSize="10.5" Foreground="{StaticResource InkTertiary}" />
+                                <ComboBox x:Name="EdgeCombo" Height="30" Margin="0,5,0,0" FontSize="11.5" />
+                                <TextBlock x:Name="EdgeHint" FontSize="10" Foreground="{StaticResource InkTertiary}"
+                                           Margin="0,5,0,0" TextWrapping="Wrap"
+                                           Text="这一项没有公开的 DRS 字段号，本工具只做记录，需要时在 NVIDIA App 里设。" />
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBlock Text="DLSS 组件覆盖" FontSize="10.5" Foreground="{StaticResource InkTertiary}"
+                                       VerticalAlignment="Center" Margin="0,0,10,0" />
+                            <ComboBox x:Name="OverrideCombo" Width="260" Height="28" FontSize="11.5"
+                                      DisplayMemberPath="Label" SelectionChanged="OnOverrideChanged" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- 边界说明 -->
+                <Border Background="{StaticResource WarnSoft}" BorderBrush="{StaticResource Warn}" BorderThickness="1" CornerRadius="10"
+                        Padding="14,11" Margin="0,0,0,6">
+                    <StackPanel>
+                        <TextBlock Text="保存后会生成一个 .nip 配置文件" FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{StaticResource LevelHintChip}" />
+                        <TextBlock x:Name="NipExplain" FontSize="10.5" Foreground="{StaticResource LevelHintChip}" Margin="0,5,0,0"
+                                   TextWrapping="Wrap"
+                                   Text="DLSS 预设放在 NVIDIA 的驱动配置里。本机 NVAPI 能建立会话，但按名字定位游戏配置会返回「找不到配置」，硬写有可能写到错误的配置上，所以这里不直接改驱动。生成的 .nip 是 NVIDIA Profile Inspector 的标准导入格式，导入后写入的是同一份数据，效果一致，也能在 NVIDIA 控制面板里还原。" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部 -->
+        <Border Grid.Row="3" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0"
+                Padding="24,12" Margin="0,10,0,0">
+            <Grid>
+                <TextBlock x:Name="StatusText" FontSize="11" Foreground="{StaticResource InkTertiary}" VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" MaxWidth="400" HorizontalAlignment="Left"
+                           Text="选一套预设，保存后会给出导入文件路径。" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="打开导入文件目录" Style="{StaticResource ToolButton}" Click="OnOpenNipDir" />
+                    <Button Content="恢复默认" Style="{StaticResource ToolButton}" Click="OnReset" />
+                    <Button Content="保存并生成配置" Style="{StaticResource PrimaryButton}" Click="OnSave" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

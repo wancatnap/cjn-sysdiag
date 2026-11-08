@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12.0</LangVersion>
+    <AssemblyName>SysDiag</AssemblyName>
+    <RootNamespace>SysDiag</RootNamespace>
+    <Product>破烂优化</Product>
+    <AssemblyTitle>破烂优化</AssemblyTitle>
+    <!-- exe 图标（任务管理器 / 任务栏 / 资源管理器都用它）。
+         由 tools/make-ico.py 生成（python tools/make-ico.py src/SysDiag/app.ico）。
+         图标是生成产物不进版本库：缺失时构建仍通过，只是 exe 用默认图标。 -->
+    <ApplicationIcon Condition="Exists('app.ico')">app.ico</ApplicationIcon>
+    <!-- exe 图标（任务管理器 / 任务栏 / 资源管理器都用它）。
+         由 tools/make-ico.py 生成，多尺寸 16~256，改配色或形状重跑脚本即可。 -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>2.0.0</Version>
+    <FileVersion>2.0.0.0</FileVersion>
+    <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+    <DebugType>none</DebugType>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- 注：不要开 InvariantGlobalization。WPF 文本栈需要 en-US 这个具体文化，
+         开了会让 ListBox 等控件抛 "Cannot find non-neutral culture related to 'en-us'"。
+         ICU 那 ~30MB 映射是 WPF 的硬依赖，省不掉。 -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 单文件不要再压缩。压缩版启动时要把整包解压，实测工作集 231MB；不压缩 142MB。
+         代价是 exe 从 67MB 变成 142MB——用体积换内存，本机工具这笔账划算。 -->
+    <RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="5" />
+
+    <!-- 保留并发 GC：实测关掉后 GC 提交量反而从 52MB 涨到 103MB（段管理方式变了）。 -->
+    <RuntimeHostConfigurationOption Include="System.GC.Concurrent" Value="true" />
+    <RuntimeHostConfigurationOption Include="System.GC.RetainVM" Value="false" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- 发布默认值：单文件、不压缩。命令行不传也不会退回压缩。 -->
+    <EnableCompressionInSingleFile>false</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <!-- 刻意不内置任何图片素材：游戏截图、摄影作品都有版权，不能随源码分发。
+       调色面板的对比底图由用户自己选（存到 %LOCALAPPDATA%\SysDiag\color-reference.jpg），
+       没选时自动退回程序化生成的色卡。 -->
+
+  <ItemGroup>
+    <!-- 同一个 ico 既进 PE 资源（任务管理器/资源管理器），也作为 WPF Resource
+         （MainWindow.Icon 用它）。WPF 窗口不设 Icon 时任务栏显示系统默认图标，
+         不会自动用 exe 图标——这是任务栏上看到旧图标的原因。 -->
+    <Resource Include="app.ico" Condition="Exists('app.ico')" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

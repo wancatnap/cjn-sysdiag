@@ -1,0 +1,242 @@
+<Window x:Class="SysDiag.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="破烂优化" Height="880" Width="1240" MinHeight="640" MinWidth="920"
+        Icon="pack://application:,,,/app.ico"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Canvas}"
+        FontFamily="Segoe UI, Microsoft YaHei UI, Microsoft YaHei"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType">
+
+    <Window.Resources>
+
+        <!-- 单张功能卡片 -->
+        <DataTemplate x:Key="CardTemplate">
+            <Button Style="{StaticResource CardButton}" Click="OnCardClick" Tag="{Binding}" ToolTip="{Binding Tip}">
+                <StackPanel Orientation="Horizontal">
+                    <!-- 图标牌：分组淡色圆角块 + 双色矢量图标（图标见 Services/IconLibrary.cs） -->
+                    <Grid Width="34" Height="34" VerticalAlignment="Top" Margin="0,1,10,0">
+                        <Border CornerRadius="11" Background="{Binding TintBrush}" />
+                        <Image Source="{Binding Icon}" Width="22" Height="22" Stretch="Uniform"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Grid>
+
+                    <!--  只有名称。副标题不显示：信息改由 ToolTip 承载，
+                          版面用图标 + 名称 + 分组来表达。  -->
+                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis" Width="96" />
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+
+        <!-- 一个分组 -->
+        <DataTemplate x:Key="GroupTemplate">
+            <StackPanel Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,12">
+                    <!-- 分组小图标，替代原来的圆点：图标本身就在传达分组语义 -->
+                    <Image Source="{Binding Icon}" Width="17" Height="17" Stretch="Uniform"
+                           Margin="0,0,9,0" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality" />
+
+                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" VerticalAlignment="Center" />
+
+                    <Border Background="{StaticResource SurfaceRaise}" CornerRadius="8"
+                            Padding="7,2" Margin="9,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CountText}" FontFamily="Consolas" FontSize="10"
+                                   Foreground="{StaticResource InkTertiary}" />
+                    </Border>
+                </StackPanel>
+
+                <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource CardTemplate}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Grid Background="{StaticResource Canvas}">
+
+        <!-- 网格底纹 -->
+        <Rectangle Fill="{StaticResource GridBg}" IsHitTestVisible="False" />
+
+        <!-- 顶部氛围光 -->
+        <Rectangle Fill="{StaticResource TopGlow}" Height="300" VerticalAlignment="Top"
+                   IsHitTestVisible="False" />
+
+        <!-- 背景云朵：只放一朵在右上角，避开标题文字；去描边让它融进天空 -->
+        <Canvas IsHitTestVisible="False" ClipToBounds="True">
+            <Canvas.Resources>
+                <SolidColorBrush x:Key="CloudFill" Color="#FFFFFF" />
+            </Canvas.Resources>
+            <Grid Opacity="0.55">
+                <Ellipse Canvas.Left="906" Canvas.Top="58" Width="148" Height="40" Fill="{StaticResource CloudFill}" />
+                <Ellipse Canvas.Left="962" Canvas.Top="36" Width="112" Height="62" Fill="{StaticResource CloudFill}" />
+                <Ellipse Canvas.Left="1032" Canvas.Top="54" Width="82" Height="44" Fill="{StaticResource CloudFill}" />
+            </Grid>
+        </Canvas>
+
+        <!-- 樱花飘落层：纯装饰，不参与命中测试；花瓣在代码里生成 -->
+        <Canvas x:Name="SakuraLayer" ClipToBounds="True" IsHitTestVisible="False" />
+
+        <!-- 飞鸟层：偶尔掠过，代码里生成 -->
+        <Canvas x:Name="BirdLayer" ClipToBounds="True" IsHitTestVisible="False" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- 标题 + 权限状态 -->
+            <Grid Grid.Row="0" Margin="32,26,32,0">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource SakuraLogo}" Width="40" Height="40"
+                               Margin="0,0,11,0" VerticalAlignment="Center" />
+
+                        <TextBlock Text="破烂优化" FontSize="24" FontWeight="SemiBold"
+                                   Foreground="{StaticResource Ink}" VerticalAlignment="Center" />
+
+                        <TextBlock x:Name="VersionText" Text="" FontSize="10" FontFamily="Consolas"
+                                   Foreground="{StaticResource InkFaint}" Margin="12,5,0,0"
+                                   VerticalAlignment="Center" />
+
+                        <Border x:Name="AdminBadge" CornerRadius="6" Padding="10,3" Margin="12,0,0,0"
+                                VerticalAlignment="Center" Background="{StaticResource SurfaceRaise}"
+                                BorderBrush="{StaticResource Line}" BorderThickness="1">
+                            <TextBlock x:Name="AdminBadgeText" Text="普通权限" FontSize="10.5"
+                                       FontFamily="Consolas" Foreground="{StaticResource InkTertiary}" />
+                        </Border>
+                    </StackPanel>
+
+                    <!-- 细分隔线：把标题区和内容区分开，替代原来的发光装饰 -->
+                    <Border Height="1" Background="{StaticResource LineSoft}" Margin="0,18,0,0" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="关于" Style="{StaticResource ToolButton}" Click="OnAbout"
+                            Padding="9,0" Margin="0,0,8,0"
+                            ToolTip="软件定位、数据来源、免责声明" />
+                    <Button x:Name="PetalBtn" Style="{StaticResource ToolButton}" Click="OnTogglePetals"
+                            Padding="9,0" Margin="0,0,8,0"
+                            ToolTip="樱花飘落（点击开关）">
+                        <Image Source="{StaticResource SakuraLogo}" Width="13" Height="13" />
+                    </Button>
+                    <Button x:Name="ElevateBtn" Content="以管理员身份重启" Style="{StaticResource ToolButton}"
+                            VerticalAlignment="Center" Click="OnElevate"
+                            Visibility="Collapsed"
+                            ToolTip="重启整个程序并请求管理员权限，用于读取 USN 文件删除记录" />
+                </StackPanel>
+            </Grid>
+
+            <!-- 搜索 -->
+            <Grid Grid.Row="1" Margin="32,18,32,8">
+                <TextBox x:Name="SearchBox" Style="{StaticResource SearchInput}"
+                         Padding="42,0,14,0" TextChanged="OnSearchChanged" />
+
+                <Grid Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center"
+                      Margin="16,0,0,0" IsHitTestVisible="False">
+                    <Ellipse Width="11" Height="11" Stroke="{StaticResource InkFaint}" StrokeThickness="1.7"
+                             HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <Line X1="9.9" Y1="9.9" X2="14.6" Y2="14.6" Stroke="{StaticResource InkFaint}" StrokeThickness="2"
+                          StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                </Grid>
+
+                <TextBlock x:Name="SearchHint" Text="搜索"
+                           FontSize="13" Foreground="{StaticResource InkFaint}" Margin="42,0,0,0"
+                           VerticalAlignment="Center" IsHitTestVisible="False" />
+            </Grid>
+
+            <!-- 远程公告：只有验签通过才显示；拉不到就整条隐藏，不占位也不打扰 -->
+            <!--  公告：只有标题和正文，没有按钮。
+                   不设「关闭」是因为它本来就不该长期占位——看过一次，下次启动就不再出现（见 LoadNoticeAsync）。
+                   不设「查看详情」是因为正文已经把事说完；真要找功能，卡片区自己就有。  -->
+            <Border x:Name="NoticeBar" Grid.Row="2" Margin="32,12,32,0" Padding="14,10" CornerRadius="10"
+                    Background="{StaticResource PrimarySoft}" BorderBrush="{StaticResource PrimaryLine}"
+                    BorderThickness="1" Visibility="Collapsed">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock x:Name="NoticeTitle" FontSize="11.5" FontWeight="SemiBold"
+                               Foreground="{StaticResource Primary}" TextWrapping="Wrap" />
+                    <TextBlock x:Name="NoticeText" FontSize="10.5" Foreground="{StaticResource InkSecondary}"
+                               TextWrapping="Wrap" LineHeight="16" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- 卡片区 -->
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled" Padding="32,0,20,0">
+                <ItemsControl x:Name="GroupList" ItemTemplate="{StaticResource GroupTemplate}"
+                              Margin="0,0,8,20">
+                    <ItemsControl.RenderTransform>
+                        <TranslateTransform Y="10" />
+                    </ItemsControl.RenderTransform>
+                    <ItemsControl.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     From="0" To="1" Duration="0:0:0.4" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                     From="10" To="0" Duration="0:0:0.4">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ItemsControl.Triggers>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- 状态栏 -->
+            <Border Grid.Row="4" Background="{StaticResource CanvasDeep}"
+                    BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0" Padding="32,0">
+                <Grid Height="50">
+                    <!-- 顶部一道青色微光 -->
+                    <Rectangle Height="1" VerticalAlignment="Top" Margin="-32,0"
+                               Fill="{StaticResource Primary}" Opacity="0.18" />
+
+                    <TextBlock x:Name="StatusText" VerticalAlignment="Center" FontSize="11"
+                               FontFamily="Consolas, Microsoft YaHei UI"
+                               Foreground="{StaticResource InkTertiary}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button Content="打开报告目录" Style="{StaticResource GhostButton}" Click="OnOpenOutput" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 分析中遮罩 -->
+        <Border x:Name="Busy" Background="#B8F5F7FB" Visibility="Collapsed">
+            <Border Background="{StaticResource Surface}" CornerRadius="8" Padding="30,26"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BorderBrush="{StaticResource PrimaryLine}" BorderThickness="1">
+                <StackPanel Width="380">
+                    <TextBlock x:Name="BusyTitle" Text="正在处理" FontSize="15" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" />
+                    <TextBlock x:Name="BusyText" Text="准备中…" FontSize="11" FontFamily="Consolas, Microsoft YaHei UI"
+                               Foreground="{StaticResource InkTertiary}"
+                               Margin="0,9,0,0" TextWrapping="Wrap" LineHeight="17" />
+                    <ProgressBar x:Name="BusyBar" Height="2" Margin="0,18,0,0" IsIndeterminate="True"
+                                 Foreground="{StaticResource Primary}" Background="{StaticResource LineSoft}"
+                                 BorderThickness="0" />
+                </StackPanel>
+            </Border>
+        </Border>
+
+    </Grid>
+</Window>

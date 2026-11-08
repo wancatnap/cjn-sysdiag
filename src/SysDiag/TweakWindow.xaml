@@ -1,0 +1,93 @@
+<Window x:Class="SysDiag.TweakWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="系统优化" Height="820" Width="1080" MinHeight="600" MinWidth="920"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Margin="24,20,24,10"
+                             Title="系统优化" Badge="系统优化域" />
+
+        <!-- 工具条 -->
+        <Border Grid.Row="1" Margin="24,0,24,0" Padding="16,12" CornerRadius="10"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="SummaryText" Grid.Column="0" FontSize="11.5"
+                           Foreground="{StaticResource InkSecondary}" VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" Margin="0,0,12,0"
+                           Text="正在读取当前状态…" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="硬件调优" Style="{StaticResource ToolButton}"
+                            Click="OnOpenHardwareTune"
+                            ToolTip="Game Bar、GPU 硬件调度、系统服务、CPU 前后台调度、鼠标精准输入。这些带档位选择和批量操作，单独一个面板。" />
+                    <Button x:Name="ExportBtn" Content="导出还原脚本" Style="{StaticResource ToolButton}"
+                            Click="OnExport" ToolTip="把当前所有项的值导出成 .reg + .cmd，拷走也能还原（不依赖本软件）" />
+                    <Button x:Name="RestoreBtn" Content="还原全部改动" Style="{StaticResource ToolButton}"
+                            Click="OnRestoreAll" />
+                    <Button x:Name="ReloadBtn" Content="刷新状态" Style="{StaticResource ToolButton}"
+                            Click="OnReload" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 管理员提示 -->
+        <Border x:Name="AdminBanner" Grid.Row="2" Margin="24,10,24,0" Padding="14,10" CornerRadius="10"
+                Background="{StaticResource DangerSoft}" BorderBrush="{StaticResource Danger}" BorderThickness="1">
+            <StackPanel>
+                <TextBlock x:Name="AdminTitle" Text="普通权限" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{StaticResource Danger}" />
+                <TextBlock x:Name="AdminDetail" FontSize="10.5" Foreground="{StaticResource InkTertiary}"
+                           Margin="0,4,0,0" TextWrapping="Wrap" LineHeight="16" />
+            </StackPanel>
+        </Border>
+
+        <!-- 主体：左分类 + 右条目 -->
+        <Grid Grid.Row="3" Margin="24,12,24,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="196" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧分组会随条目扩展变多，必须自己能滚；右侧条目区同理。
+                 之前这里是裸 StackPanel，8 组之后溢出，「开关机与稳定性」等底部分组既看不到也点不到。 -->
+            <ScrollViewer Grid.Column="0" Margin="0,0,14,0"
+                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                          Padding="0,0,4,0">
+                <StackPanel x:Name="GroupHost" />
+            </ScrollViewer>
+
+            <Border Grid.Column="1" CornerRadius="10" Background="{StaticResource Surface}"
+                    BorderBrush="{StaticResource Line}" BorderThickness="1">
+                <Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                  Padding="18,4,18,8">
+                        <StackPanel x:Name="ItemHost" />
+                    </ScrollViewer>
+
+                    <TextBlock x:Name="EmptyHint" Text="正在读取当前状态…" FontSize="11"
+                               Foreground="{StaticResource InkTertiary}" Margin="20,16,20,0"
+                               VerticalAlignment="Top" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <controls:BottomBar x:Name="Bar" Grid.Row="4" Margin="0,4,0,0" />
+    </Grid>
+</Window>

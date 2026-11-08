@@ -1,0 +1,63 @@
+<Window x:Class="SysDiag.Ui.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="破烂优化" Style="{x:Null}"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" ShowInTaskbar="False" SizeToContent="Height"
+        Width="470" WindowStartupLocation="CenterOwner"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource LineBright}"
+            BorderThickness="1" CornerRadius="10" Margin="12">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" BlurRadius="18" ShadowDepth="2" Opacity="0.55" />
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- 自绘标题栏 -->
+            <Border x:Name="TitleBar" Grid.Row="0" Background="Transparent" Padding="16,12,10,8"
+                    MouseLeftButtonDown="OnTitleDrag">
+                <Grid>
+                    <TextBlock x:Name="CaptionText" Text="破烂优化" FontSize="11.5"
+                               Foreground="{StaticResource InkTertiary}" VerticalAlignment="Center" />
+                    <Button x:Name="CloseBtn" Content="✕" FontSize="11" Width="26" Height="24"
+                            HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"
+                            Foreground="{StaticResource InkFaint}" Cursor="Hand" Click="OnClose" />
+                </Grid>
+            </Border>
+
+            <!-- 正文 -->
+            <Grid Grid.Row="1" Margin="16,4,16,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border x:Name="IconBox" Grid.Column="0" Width="40" Height="40" CornerRadius="9"
+                        Background="{StaticResource PrimarySoft}" BorderBrush="{StaticResource Primary}"
+                        BorderThickness="1" Margin="0,0,14,0" VerticalAlignment="Top">
+                    <TextBlock x:Name="IconGlyph" Text="i" FontSize="19" FontWeight="SemiBold"
+                               Foreground="{StaticResource Primary}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+
+                <ScrollViewer Grid.Column="1" MaxHeight="330" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <TextBlock x:Name="MessageText" Text="" FontSize="12" LineHeight="20"
+                               Foreground="{StaticResource Ink}" TextWrapping="Wrap" />
+                </ScrollViewer>
+            </Grid>
+
+            <!-- 按钮 -->
+            <StackPanel x:Name="ButtonRow" Grid.Row="2" Orientation="Horizontal"
+                        HorizontalAlignment="Right" Margin="16,12,16,14" />
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,84 @@
+<Window x:Class="SysDiag.MonitorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="挂机监控" Height="860" Width="1020" MinHeight="620" MinWidth="880"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Margin="24,20,24,10"
+                             Title="挂机监控" Badge="自己打，程序看着" />
+
+        <!-- 摘要 -->
+        <Border Grid.Row="1" Margin="24,0,24,0" Padding="16,13" CornerRadius="6"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <controls:KpiStrip x:Name="Kpi" VerticalAlignment="Center" />
+                <TextBlock x:Name="VerdictText" Text="未开始" FontSize="11.5"
+                           Foreground="{StaticResource InkSecondary}" HorizontalAlignment="Right"
+                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="420" />
+            </Grid>
+        </Border>
+
+        <!-- 工具条（两行：控件一行，状态与提权一行，避免重叠） -->
+        <Grid Grid.Row="2" Margin="24,12,24,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- 9 个控件在 880 宽下会超出约 82px，用 WrapPanel 自动换行，窄窗口也不会把按钮挤到框外 -->
+            <WrapPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="目标：" FontSize="11" Foreground="{StaticResource InkSecondary}"
+                           VerticalAlignment="Center" />
+                <ComboBox x:Name="TargetCombo" Width="240" Height="28" FontSize="11"
+                          VerticalContentAlignment="Center" />
+                <TextBlock Text="采样间隔" FontSize="11" Foreground="{StaticResource InkSecondary}"
+                           VerticalAlignment="Center" Margin="12,0,0,0" />
+                <ComboBox x:Name="IntervalBox" Width="82" Height="28" FontSize="11" Margin="8,0,0,0"
+                          VerticalContentAlignment="Center" SelectedIndex="1">
+                    <ComboBoxItem Content="3 秒" Tag="3" />
+                    <ComboBoxItem Content="5 秒" Tag="5" />
+                    <ComboBoxItem Content="10 秒" Tag="10" />
+                    <ComboBoxItem Content="30 秒" Tag="30" />
+                </ComboBox>
+                <CheckBox x:Name="AutoLockBox" Content="自动锁定游戏（跟随重启）" FontSize="10.5"
+                          VerticalAlignment="Center" Margin="12,0,0,0" IsChecked="True"
+                          Checked="OnAutoLockChanged" Unchecked="OnAutoLockChanged" />
+                <Button x:Name="StartBtn" Content="开始监控" Style="{StaticResource PrimaryButton}"
+                        Margin="10,0,0,0" Click="OnStart" />
+                <Button x:Name="StopBtn" Content="停止" Style="{StaticResource ToolButton}"
+                        IsEnabled="False" Click="OnStop" />
+                <Button x:Name="ReportBtn" Content="生成报告" Style="{StaticResource ToolButton}"
+                        IsEnabled="False" Click="OnReport" />
+                <Button x:Name="FrameBtn" Content="测 20 秒帧率" Style="{StaticResource ToolButton}"
+                        Click="OnFrameTest"
+                        ToolTip="调用 Intel PresentMon 采真实帧时间。没装 PresentMon 时会提示怎么放。" />
+            </WrapPanel>
+
+            <Grid Grid.Row="1" Margin="0,8,0,0">
+                <TextBlock x:Name="StatusText" Text="选目标后点「开始监控」" FontSize="11"
+                           Foreground="{StaticResource InkTertiary}" VerticalAlignment="Center"
+                           HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" MaxWidth="560" />
+                <Button x:Name="ElevateBtn" Content="以管理员身份重启" Style="{StaticResource ToolButton}"
+                        Click="OnElevate" Visibility="Collapsed" HorizontalAlignment="Right" />
+            </Grid>
+        </Grid>
+
+        <!-- 实时事件 -->
+        <controls:LogGridView x:Name="EventGrid" Grid.Row="3" Margin="24,0,24,0" />
+
+        <!-- 底部 -->
+        <controls:BottomBar x:Name="Bar" Grid.Row="4" Margin="0,4,0,0" />
+    </Grid>
+</Window>

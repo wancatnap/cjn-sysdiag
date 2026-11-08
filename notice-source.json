@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "enabled": true,
+  "level": "info",
+  "title": "11 月更新",
+  "message": "破烂优化--优化系统和游戏。一切数据来自网络，有对应警告",
+  "url": "https://github.com/wancatnap/sysdiag-notice",
+  "urlText": "查看详情",
+  "expires": "2027-06-01T00:00:00Z"
+}

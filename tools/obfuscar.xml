@@ -1,0 +1,32 @@
+<?xml version='1.0'?>
+<!--
+  发布用混淆配置：**只开字符串加密，名称一律不动**。
+
+  为什么不动名称：这个程序是 WPF，XAML 的 x:Class / 绑定路径、枚举的 ToString()、
+  JSON 序列化的字段名、以及 346 项自检里的按名字查找，全都依赖类型名和方法名。
+  名称一改就会成片崩，收益远小于维护成本。
+
+  字符串加密能拿到的效果：反编译出来的不再是
+      ("SMBIOS UUID", true)
+  而是
+      (4B426D24-...-A7D1.aGH(), true)
+  实测可读字符串字面量从 7145 处降到 301 处，中文关键词 0 残留，346 项自检全过。
+
+  路径相对「运行 obfuscar 的工作目录」（项目根），所以 pack.cmd 里必须先 cd 到项目根。
+-->
+<Obfuscator>
+  <Var name="InPath" value="src\SysDiag\bin\Release\net8.0-windows\win-x64" />
+  <Var name="OutPath" value=".tmp-obf" />
+
+  <Var name="HideStrings" value="true" />
+  <Var name="RenameTypes" value="false" />
+  <Var name="RenameFields" value="false" />
+  <Var name="RenameProperties" value="false" />
+  <Var name="RenameEvents" value="false" />
+  <Var name="RenameMethods" value="false" />
+  <Var name="KeepPublicApi" value="true" />
+  <Var name="HidePrivateApi" value="false" />
+  <Var name="LogFile" value="false" />
+
+  <Module file="$(InPath)\SysDiag.dll" />
+</Obfuscator>

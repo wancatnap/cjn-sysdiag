@@ -1,0 +1,234 @@
+<UserControl x:Class="SysDiag.Controls.LogGridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  统一日志表格：搜索 / 等级筛选 / 排序 / 时间柱状图 / 计数。
+         行内容全部来自 Models.LogRow，窗口只负责把数据映射进来。
+
+         内存要点：列表用 ListBox + VirtualizingStackPanel（Recycling + 像素滚动），
+         只实例化可见行（约 15~25 个容器）而不是全部 3000 行。
+         行模板越复杂，虚拟化省的越多——这是本软件最大的单点内存开销。  -->
+    <UserControl.Resources>
+        <!-- 行容器：去掉 ListBoxItem 的选中高亮/焦点视觉/内边距，只做纯呈现 -->
+        <Style x:Key="LogRowContainer" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="SectionHeader" Grid.Row="0" Orientation="Horizontal" Margin="2,0,0,2"
+                    Visibility="Collapsed">
+            <Border Width="3" Height="13" CornerRadius="2" Margin="0,0,9,0"
+                    Background="{StaticResource Primary}" VerticalAlignment="Center" />
+            <TextBlock x:Name="SectionTitle" FontSize="12.5" FontWeight="SemiBold"
+                       Foreground="{StaticResource Ink}" VerticalAlignment="Center" />
+            <TextBlock x:Name="SectionNote" FontSize="10" Margin="10,1,0,0"
+                       Foreground="{StaticResource InkFaint}" VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <!-- 工具条 -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+                <Border x:Name="SearchHost" Width="210" Height="28" CornerRadius="5"
+                        Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}"
+                        BorderThickness="1">
+                    <Grid>
+                        <TextBlock x:Name="SearchWatermark" Text="搜索（Ctrl+F 聚焦）" FontSize="10.5"
+                                   Foreground="{StaticResource InkFaint}" Margin="9,0,0,0"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <TextBox x:Name="SearchBox" BorderThickness="0" Background="Transparent"
+                                 FontSize="10.5" Foreground="{StaticResource Ink}" Margin="9,0,26,0"
+                                 VerticalContentAlignment="Center" CaretBrush="{StaticResource Primary}"
+                                 TextChanged="OnSearchChanged" />
+                        <TextBlock x:Name="SearchCount" FontSize="9" FontFamily="Consolas"
+                                   Foreground="{StaticResource InkFaint}" Margin="0,0,8,0"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <StackPanel x:Name="ChipPanel" Orientation="Horizontal" Margin="10,0,0,0" />
+
+                <Button x:Name="ClearFilterBtn" Content="清除筛选" Style="{StaticResource ToolButton}"
+                        Margin="10,0,0,0" Visibility="Collapsed" Click="OnClearFilters" FontSize="10.5" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 时间分布柱状图（ShowTimeline 时显示） -->
+        <Border Grid.Row="2" x:Name="TimelineHost" Margin="0,0,0,8" Visibility="Collapsed"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}"
+                BorderThickness="1" CornerRadius="6" Padding="8,6">
+            <StackPanel>
+                <Grid>
+                    <TextBlock Text="时间分布" FontSize="9.5" Foreground="{StaticResource InkFaint}"
+                               HorizontalAlignment="Left" />
+                    <TextBlock x:Name="TimelineHint" FontSize="9" FontFamily="Consolas"
+                               Foreground="{StaticResource Primary}" HorizontalAlignment="Right" />
+                </Grid>
+                <Canvas x:Name="TimelineCanvas" Height="56" Margin="0,4,0,0"
+                        Background="Transparent" MouseLeftButtonDown="OnTimelineBackgroundClick" />
+            </StackPanel>
+        </Border>
+
+        <!-- 行列表：ListBox 自带 VirtualizingStackPanel，不再套 ScrollViewer -->
+        <Grid Grid.Row="3">
+            <!-- 卡片模式 -->
+            <ListBox x:Name="CardList" Background="Transparent" BorderThickness="0" Padding="0"
+                     ItemContainerStyle="{StaticResource LogRowContainer}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.CanContentScroll="True"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.VirtualizationMode="Recycling"
+                     VirtualizingPanel.ScrollUnit="Pixel"
+                     VirtualizingPanel.CacheLength="0.5,0.5"
+                     VirtualizingPanel.CacheLengthUnit="Page">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}"
+                                BorderThickness="1" CornerRadius="6" Padding="0" Margin="0,0,8,7"
+                                SnapsToDevicePixels="True" Cursor="Hand"
+                                MouseLeftButtonDown="OnRowClick">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="110" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="{Binding LevelBrush}" CornerRadius="6,0,0,6" />
+
+                                <StackPanel Grid.Column="1" Margin="12,8,10,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource Ink}"
+                                                   TextTrimming="CharacterEllipsis" MaxWidth="620" />
+                                        <Border Background="#F3F0FF" BorderBrush="#D0BFFF" BorderThickness="1"
+                                                CornerRadius="3" Padding="5,0" Margin="7,1,0,0" VerticalAlignment="Center"
+                                                Visibility="{Binding TagVis}">
+                                            <TextBlock Text="{Binding Tag}" FontSize="9" Foreground="#7048E8" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Detail}" FontSize="10" FontFamily="Consolas"
+                                               Foreground="{StaticResource InkSecondary}" Margin="0,4,0,0"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding Basis}" FontSize="9.5"
+                                               Foreground="{StaticResource InkFaint}" Margin="0,3,0,0"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" Margin="0,8,12,8" HorizontalAlignment="Right"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding TimeText}" FontSize="9" FontFamily="Consolas"
+                                               Foreground="{StaticResource InkFaint}" TextAlignment="Right" />
+                                    <TextBlock Text="{Binding LevelText}" FontSize="10.5" FontWeight="SemiBold"
+                                               Foreground="{Binding LevelChipBrush}" TextAlignment="Right"
+                                               Margin="0,3,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- 紧凑模式 -->
+            <ListBox x:Name="CompactList" Background="Transparent" BorderThickness="0" Padding="0"
+                     Visibility="Collapsed"
+                     ItemContainerStyle="{StaticResource LogRowContainer}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.CanContentScroll="True"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.VirtualizationMode="Recycling"
+                     VirtualizingPanel.ScrollUnit="Pixel"
+                     VirtualizingPanel.CacheLength="0.5,0.5"
+                     VirtualizingPanel.CacheLengthUnit="Page">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}"
+                                BorderThickness="1" CornerRadius="6" Margin="0,0,8,4"
+                                SnapsToDevicePixels="True" Cursor="Hand"
+                                MouseLeftButtonDown="OnRowClick">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="88" />
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="52" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="{Binding LevelBrush}" CornerRadius="6,0,0,6" />
+
+                                <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{StaticResource Ink}" Margin="12,0,8,0"
+                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center" MinHeight="30" />
+                                <TextBlock Grid.Column="2" Text="{Binding MetricText}" FontSize="10"
+                                           FontFamily="Consolas" Foreground="{StaticResource Primary}"
+                                           TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBlock Grid.Column="3" Text="{Binding TimeText}" FontSize="9.5"
+                                           FontFamily="Consolas" Foreground="{StaticResource InkTertiary}"
+                                           TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBlock Grid.Column="4" Text="{Binding LevelText}" FontSize="10"
+                                           FontWeight="SemiBold" Foreground="{Binding LevelChipBrush}"
+                                           TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- 空状态：一个「闭眼叹气」的小表情 + 文案，避免大片空白显得像出错 -->
+            <StackPanel x:Name="EmptyText" Visibility="Collapsed" Margin="0,22,0,0"
+                        HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Viewbox Width="56" Height="56" HorizontalAlignment="Center">
+                    <Canvas Width="46" Height="46">
+                        <Ellipse Canvas.Left="8" Canvas.Top="10" Width="30" Height="28"
+                                 Fill="#FFF3F6" Stroke="#E8C8D4" StrokeThickness="1.4" />
+                        <Path Stroke="#6A5860" StrokeThickness="2.1" Fill="Transparent"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Data="M15,22 Q18,25 21,22" />
+                        <Path Stroke="#6A5860" StrokeThickness="2.1" Fill="Transparent"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Data="M25,22 Q28,25 31,22" />
+                        <Path Stroke="#C99AA8" StrokeThickness="1.4" Fill="Transparent"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Data="M19,30 Q23,32 27,30" />
+                        <Ellipse Canvas.Left="11" Canvas.Top="26" Width="6" Height="3"
+                                 Fill="#FFB6C9" Opacity="0.55" />
+                        <Ellipse Canvas.Left="29" Canvas.Top="26" Width="6" Height="3"
+                                 Fill="#FFB6C9" Opacity="0.55" />
+                        <Path Stroke="#B9A6AE" StrokeThickness="1.4" Fill="Transparent"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Data="M9,14 Q12,7 17,4" />
+                    </Canvas>
+                </Viewbox>
+                <TextBlock Text="没有符合条件的记录" FontSize="11" Margin="0,6,0,0"
+                           Foreground="{StaticResource InkFaint}" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 状态栏 -->
+        <Grid Grid.Row="4" Margin="0,6,0,0">
+            <TextBlock x:Name="StatusText" FontSize="9.5" FontFamily="Consolas"
+                       Foreground="{StaticResource InkFaint}" HorizontalAlignment="Left" />
+            <TextBlock x:Name="SortText" FontSize="9.5" FontFamily="Consolas"
+                       Foreground="{StaticResource InkFaint}" HorizontalAlignment="Right" />
+        </Grid>
+    </Grid>
+</UserControl>

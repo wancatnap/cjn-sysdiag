@@ -1,0 +1,69 @@
+<Window x:Class="SysDiag.BaselineWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="设备比对" Height="580" Width="820" MinHeight="440" MinWidth="720"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="24,20,24,12">
+            <StackPanel>
+                <TextBlock Text="设备比对" Style="{StaticResource PageTitle}" />
+<TextBlock x:Name="StatusDetail" Text="" FontSize="10" Foreground="{StaticResource InkFaint}"
+                           Margin="0,8,0,0" TextWrapping="Wrap" LineHeight="20" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 基线状态 -->
+        <Border Grid.Row="1" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1"
+                CornerRadius="10" Margin="24,0,24,0" Padding="16,14">
+            <StackPanel>
+                <TextBlock x:Name="StatusTitle" Text="尚未保存基线" FontSize="13" FontWeight="SemiBold"
+                           Foreground="{StaticResource Ink}" />
+            </StackPanel>
+        </Border>
+
+        <!-- 比对范围 -->
+        <Border Grid.Row="2" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1"
+                CornerRadius="10" Margin="24,12,24,0" Padding="16,14">
+            <StackPanel>
+                <TextBlock Text="比对范围" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource InkSecondary}" />
+                <TextBlock Margin="0,8,0,0" Style="{StaticResource PageSubtitle}" LineHeight="21"
+                           TextWrapping="Wrap">
+                    机器码：SMBIOS UUID、整机序列号、主板 / BIOS 序列号、ProcessorId、磁盘序列号、MachineGuid、物理网卡 MAC、卷序列号<LineBreak />
+                    USB 设备：型号、VID/PID、序列号
+                </TextBlock>
+                <TextBlock Margin="0,8,0,0" FontSize="11" Foreground="{StaticResource InkFaint}" TextWrapping="Wrap">
+                    不比对会天天变的东西（内存占用、IP、进程），所以这里只看硬件与设备清单。
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Row="3" Text="" />
+
+        <!-- 底部按钮 -->
+        <Border Grid.Row="4" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0"
+                Padding="24,12">
+            <Grid>
+                <TextBlock x:Name="HintText" FontSize="11" Foreground="{StaticResource InkFaint}" VerticalAlignment="Center"
+                           Text="首次使用请先保存基线；之后每次比对都跟这份基线比。" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="打开基线位置" Style="{StaticResource ToolButton}" Click="OnOpenFolder" />
+                    <Button Content="关闭" Style="{StaticResource ToolButton}" Click="OnClose" />
+                    <Button Content="保存为新基线" Style="{StaticResource ToolButton}" Click="OnSave" />
+                    <Button x:Name="CompareBtn" Content="与基线比对" Style="{StaticResource PrimaryButton}"
+                            Click="OnCompare" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

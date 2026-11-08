@@ -1,0 +1,743 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:services="clr-namespace:SysDiag.Services">
+
+    <!-- =========================================================
+         浅色清爽主题（Clean Light）
+         暖白底 + 樱粉主色 + 天蓝点缀；大圆角、干净留白、不发光。
+         原则：层级靠留白与字重建立，彩色只出现在图标与语义标记上。
+         ========================================================= -->
+
+    <!-- 表面与描边（暖白系，层次靠 1px 描边与底色差） -->
+    <SolidColorBrush x:Key="Canvas"        Color="#FDF9FA" />
+    <SolidColorBrush x:Key="CanvasDeep"    Color="#F6EEF1" />
+    <SolidColorBrush x:Key="Surface"       Color="#FFFFFF" />
+    <SolidColorBrush x:Key="SurfaceHover"  Color="#FFF6F9" />
+    <SolidColorBrush x:Key="SurfaceRaise"  Color="#FCEFF4" />
+    <SolidColorBrush x:Key="Line"          Color="#F1E3E8" />
+    <SolidColorBrush x:Key="LineBright"    Color="#E0C9D2" />
+    <SolidColorBrush x:Key="LineSoft"      Color="#FAF3F6" />
+
+    <!-- 文字：深墨 → 灰阶 -->
+    <SolidColorBrush x:Key="Ink"           Color="#2E2330" />
+    <SolidColorBrush x:Key="InkSecondary"  Color="#6A5860" />
+    <SolidColorBrush x:Key="InkTertiary"   Color="#8A7580" />
+    <SolidColorBrush x:Key="InkFaint"      Color="#A6919B" />
+
+    <!-- 主色：樱粉（品牌色，只用于主操作与焦点） -->
+    <SolidColorBrush x:Key="Primary"       Color="#DB4A7B" />
+    <SolidColorBrush x:Key="PrimarySoft"   Color="#FFE8F0" />
+    <SolidColorBrush x:Key="PrimaryLine"   Color="#FFC2D6" />
+    <SolidColorBrush x:Key="PrimaryPress"  Color="#B83A63" />
+    <SolidColorBrush x:Key="PrimaryDim"    Color="#F08CAE" />
+
+    <!-- 次色：天蓝（对比点缀，少量使用） -->
+    <SolidColorBrush x:Key="Accent"        Color="#5B9DFF" />
+    <SolidColorBrush x:Key="AccentSoft"    Color="#E8F1FF" />
+
+    <!-- 语义（保持高辨识度，与等级色一致） -->
+    <SolidColorBrush x:Key="Success"       Color="#2F9E44" />
+    <SolidColorBrush x:Key="SuccessSoft"   Color="#EBFBEE" />
+    <SolidColorBrush x:Key="Warn"          Color="#F08C00" />
+    <SolidColorBrush x:Key="WarnSoft"      Color="#FFF8E6" />
+    <SolidColorBrush x:Key="Danger"        Color="#D32F2F" />
+    <SolidColorBrush x:Key="DangerSoft"    Color="#FDECEC" />
+
+    <!-- =========================================================
+         圆角与间距：全软件只有这三档圆角，避免 8 种半径混用
+         ========================================================= -->
+    <sys:Double x:Key="RadiusSm">6</sys:Double>
+    <sys:Double x:Key="RadiusMd">10</sys:Double>
+    <sys:Double x:Key="RadiusLg">14</sys:Double>
+    <!-- =========================================================
+         等级语义色（统一日志表格 / 发现 / 句柄 / 时间线共用）
+         改等级配色只改这一段，窗口与 C# 都从这里取
+         ========================================================= -->
+    <SolidColorBrush x:Key="LevelWarn"      Color="#E03131" />
+    <SolidColorBrush x:Key="LevelWarnSoft"  Color="#FFF0F0" />
+    <SolidColorBrush x:Key="LevelWarnLine"  Color="#FFC9C9" />
+    <SolidColorBrush x:Key="LevelWarnChip"  Color="#E03131" />
+    <SolidColorBrush x:Key="LevelHint"      Color="#F08C00" />
+    <SolidColorBrush x:Key="LevelHintSoft"  Color="#FFF8E6" />
+    <SolidColorBrush x:Key="LevelHintLine"  Color="#FFE0A3" />
+    <SolidColorBrush x:Key="LevelHintChip"  Color="#F08C00" />
+    <SolidColorBrush x:Key="LevelOk"        Color="#2F9E44" />
+    <SolidColorBrush x:Key="LevelOkSoft"    Color="#EBFBEE" />
+    <SolidColorBrush x:Key="LevelOkLine"    Color="#B2F2BB" />
+    <SolidColorBrush x:Key="LevelOkChip"    Color="#2F9E44" />
+    <SolidColorBrush x:Key="LevelKnown"     Color="#7048E8" />
+    <SolidColorBrush x:Key="LevelKnownSoft" Color="#F3F0FF" />
+    <SolidColorBrush x:Key="LevelKnownLine" Color="#D0BFFF" />
+    <SolidColorBrush x:Key="LevelKnownChip" Color="#7048E8" />
+    <SolidColorBrush x:Key="LevelNone"      Color="#868E96" />
+
+
+    <!-- 间距 -->
+    <sys:Double x:Key="Space1">4</sys:Double>
+    <sys:Double x:Key="Space2">8</sys:Double>
+    <sys:Double x:Key="Space3">12</sys:Double>
+    <sys:Double x:Key="Space4">16</sys:Double>
+    <sys:Double x:Key="Space6">24</sys:Double>
+    <sys:Double x:Key="Space8">32</sys:Double>
+
+    <!-- 圆角：科幻偏硬朗 -->
+    <CornerRadius x:Key="RadiusCard">6</CornerRadius>
+    <CornerRadius x:Key="RadiusButton">6</CornerRadius>
+    <CornerRadius x:Key="RadiusBadge">4</CornerRadius>
+    <CornerRadius x:Key="RadiusPill">999</CornerRadius>
+
+    <!-- =========================================================
+         背景网格：32px 一格，极暗，只提供质感
+         ========================================================= -->
+    <DrawingBrush x:Key="GridBg" TileMode="Tile"
+                  Viewport="0,0,32,32" ViewportUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing>
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,32,32" />
+                    </GeometryDrawing.Geometry>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="#F5F7FB" />
+                    </GeometryDrawing.Brush>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <LineGeometry StartPoint="0,0" EndPoint="0,32" />
+                            <LineGeometry StartPoint="0,0" EndPoint="32,0" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#E9EEF7" Thickness="0.6" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <!-- 顶部天空：垂直渐变，从淡粉过渡到背景色。
+         注意结束色必须是「同色透明」而不是 #00000000——透明黑会让渐变中段发灰发脏。 -->
+    <LinearGradientBrush x:Key="TopGlow" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Color="#FFE2EE" Offset="0" />
+        <GradientStop Color="#8CFFEDF3" Offset="0.42" />
+        <GradientStop Color="#00FDF9FA" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- =========================================================
+         功能卡片：暗面板 + 青边 + 左上角 L 形刻度 + 悬停发光
+         ========================================================= -->
+    <Style x:Key="CardButton" TargetType="Button">
+        <!--  只有一行名称，所以卡片压到 58 高：同一屏能多看一行分组，
+              也避免图标上方/下方出现大片空白。  -->
+        <Setter Property="Width" Value="170" />
+        <Setter Property="Height" Value="58" />
+        <Setter Property="Margin" Value="0,0,10,10" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd"
+                            CornerRadius="10"
+                            Background="{StaticResource Surface}"
+                            BorderBrush="{StaticResource Line}"
+                            BorderThickness="1"
+                            RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <TranslateTransform x:Name="Move" />
+                        </Border.RenderTransform>
+
+                        <ContentPresenter Margin="14,0,12,0"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- 悬停：描边提亮 + 轻微上浮，带 BackEase 回弹（像被轻轻弹了一下） -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource LineBright}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceHover}" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Move"
+                                                         Storyboard.TargetProperty="Y"
+                                                         To="-3.5" Duration="0:0:0.17">
+                                            <DoubleAnimation.EasingFunction>
+                                                <BackEase EasingMode="EaseOut" Amplitude="0.55" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Move"
+                                                         Storyboard.TargetProperty="Y"
+                                                         To="0" Duration="0:0:0.14" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceRaise}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =========================================================
+         复选框：暗底方框 + 青色勾，替代系统白底样式
+         三态（Null）用横线表示，供「整组半选」使用
+         ========================================================= -->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{StaticResource InkSecondary}" />
+        <Setter Property="FontSize" Value="11.5" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <Border x:Name="Box" Width="15" Height="15" CornerRadius="3"
+                                Background="{StaticResource SurfaceRaise}"
+                                BorderBrush="{StaticResource LineBright}" BorderThickness="1"
+                                VerticalAlignment="Center">
+                            <Grid>
+                                <TextBlock x:Name="Tick" Text="✓" FontSize="10.5" FontWeight="Bold"
+                                           Foreground="#FFFFFF" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" Margin="0,-1,0,0" Visibility="Collapsed" />
+                                <Rectangle x:Name="Dash" Width="7" Height="2" RadiusX="1" RadiusY="1"
+                                           Fill="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+                        <ContentPresenter Margin="7,0,0,0" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource Primary}" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource Primary}" />
+                            <Setter TargetName="Tick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource Primary}" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource Primary}" />
+                            <Setter TargetName="Dash" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =========================================================
+         工具栏按钮：暗底 + 细边
+         ========================================================= -->
+    <Style x:Key="ToolButton" TargetType="Button">
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Margin" Value="8,0,0,0" />
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="Foreground" Value="{StaticResource InkSecondary}" />
+        <Setter Property="Background" Value="{StaticResource Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Line}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" CornerRadius="6"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            Padding="{TemplateBinding Padding}"
+                            RenderTransformOrigin="0.5,0.5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Primary}" />
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryDim}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource PrimarySoft}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.38" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 主按钮：蓝底白字 -->
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
+        <Setter Property="Background" Value="{StaticResource Primary}" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="BorderBrush" Value="{StaticResource Primary}" />
+        <Setter Property="Padding" Value="18,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" CornerRadius="6"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            Padding="{TemplateBinding Padding}"
+                            RenderTransformOrigin="0.5,0.5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource PrimaryPress}" />
+                            <Setter TargetName="Bd" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="#DB4A7B" BlurRadius="12"
+                                                      ShadowDepth="0" Opacity="0.22" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 纯文字按钮 -->
+    <Style x:Key="GhostButton" TargetType="Button">
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Margin" Value="6,0,0,0" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource InkTertiary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" CornerRadius="5" Background="#00000000"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceRaise}" />
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryDim}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =========================================================
+         搜索框
+         ========================================================= -->
+    <Style x:Key="SearchInput" TargetType="TextBox">
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Padding" Value="14,0,14,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource Ink}" />
+        <Setter Property="CaretBrush" Value="{StaticResource Primary}" />
+        <Setter Property="SelectionBrush" Value="{StaticResource Primary}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Bd" CornerRadius="6"
+                            Background="{StaticResource Surface}"
+                            BorderBrush="{StaticResource Line}"
+                            BorderThickness="1">
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource LineBright}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Primary}" />
+                            <Setter TargetName="Bd" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="#DB4A7B" BlurRadius="10"
+                                                      ShadowDepth="0" Opacity="0.18" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- =========================================================
+         细滚动条（暗色）
+         ========================================================= -->
+    <Style x:Key="ThinThumb" TargetType="Thumb">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border x:Name="T" CornerRadius="3" Background="#DCC5CF" Margin="2,0" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="T" Property="Background" Value="{StaticResource PrimaryLine}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ScrollBar">
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Background="Transparent">
+                        <!-- 轨道底色：没有它，thumb 悬空在卡片边缘，看起来像一块碎掉的滚动条 -->
+                        <Border Background="{StaticResource LineSoft}" HorizontalAlignment="Right" Width="6" Margin="0,2,2,2" CornerRadius="3" />
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource ThinThumb}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False" />
+                            </Track.DecreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter Property="Height" Value="10" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- =========================================================
+         页面骨架样式：标题 / 副标题 / 徽章 / KPI / 节标题 / 说明
+         窗口里用 Style="{StaticResource Xxx}"，改这里＝全软件同改
+         ========================================================= -->
+    <Style x:Key="PageTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="19" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource Ink}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="PageSubtitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11.5" />
+        <Setter Property="Foreground" Value="{StaticResource InkTertiary}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+
+    <Style x:Key="PageBadge" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SurfaceRaise}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Line}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="7,1" />
+        <Setter Property="Margin" Value="10,2,0,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="PageBadgeText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="9.5" />
+        <Setter Property="Foreground" Value="{StaticResource Primary}" />
+    </Style>
+
+    <Style x:Key="KpiItem" TargetType="StackPanel">
+        <Setter Property="Margin" Value="0,0,28,0" />
+    </Style>
+
+    <Style x:Key="KpiNumber" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="Foreground" Value="{StaticResource Ink}" />
+    </Style>
+
+    <Style x:Key="KpiLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="9.5" />
+        <Setter Property="Foreground" Value="{StaticResource InkFaint}" />
+    </Style>
+
+    <Style x:Key="SectionTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource Ink}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="HintText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Foreground" Value="{StaticResource InkFaint}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="FootText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10.5" />
+        <Setter Property="Foreground" Value="{StaticResource InkFaint}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="MonoText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="FontSize" Value="9.5" />
+        <Setter Property="Foreground" Value="{StaticResource InkFaint}" />
+    </Style>
+
+
+    <!-- =========================================================
+         樱花标识：5 片花瓣 + 花蕊，纯矢量，标题栏与主界面共用
+         ========================================================= -->
+    <DrawingImage x:Key="SakuraLogo">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#FFB6C9">
+                    <GeometryDrawing.Pen><Pen Brush="#EE8FAE" Thickness="0.9" /></GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,11.6" RadiusX="5.3" RadiusY="8.8" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFC2D2">
+                    <GeometryDrawing.Pen><Pen Brush="#EE8FAE" Thickness="0.9" /></GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,11.6" RadiusX="5.3" RadiusY="8.8">
+                            <EllipseGeometry.Transform>
+                                <RotateTransform Angle="72" CenterX="20" CenterY="20" />
+                            </EllipseGeometry.Transform>
+                        </EllipseGeometry>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFB6C9">
+                    <GeometryDrawing.Pen><Pen Brush="#EE8FAE" Thickness="0.9" /></GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,11.6" RadiusX="5.3" RadiusY="8.8">
+                            <EllipseGeometry.Transform>
+                                <RotateTransform Angle="144" CenterX="20" CenterY="20" />
+                            </EllipseGeometry.Transform>
+                        </EllipseGeometry>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFC2D2">
+                    <GeometryDrawing.Pen><Pen Brush="#EE8FAE" Thickness="0.9" /></GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,11.6" RadiusX="5.3" RadiusY="8.8">
+                            <EllipseGeometry.Transform>
+                                <RotateTransform Angle="216" CenterX="20" CenterY="20" />
+                            </EllipseGeometry.Transform>
+                        </EllipseGeometry>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFB6C9">
+                    <GeometryDrawing.Pen><Pen Brush="#EE8FAE" Thickness="0.9" /></GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,11.6" RadiusX="5.3" RadiusY="8.8">
+                            <EllipseGeometry.Transform>
+                                <RotateTransform Angle="288" CenterX="20" CenterY="20" />
+                            </EllipseGeometry.Transform>
+                        </EllipseGeometry>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFD666">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,20" RadiusX="3.4" RadiusY="3.4" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFFFFF">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="20,20" RadiusX="1.5" RadiusY="1.5" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- =========================================================
+         自绘标题栏：浅色标题条 + 细线 + 三个窗口按钮
+         通过隐式 Window 样式应用到全部窗口，窗口 XAML 不用改
+         ========================================================= -->
+    <Style x:Key="WindowBtn" TargetType="Button">
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceRaise}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WindowMaxBtn" TargetType="Button" BasedOn="{StaticResource WindowBtn}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                        <Path x:Name="Icon" Data="M4,4 H12 V12 H4 Z"
+                              Stroke="{StaticResource InkSecondary}" StrokeThickness="1.2"
+                              Fill="Transparent"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceRaise}" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                     Value="Maximized">
+                            <Setter TargetName="Icon" Property="Data" Value="M4,7 H11 V13 H4 Z M7,7 V4 H13 V10 H10" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WindowCloseBtn" TargetType="Button" BasedOn="{StaticResource WindowBtn}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                        <Path x:Name="Icon" Data="M4,4 L12,12 M12,4 L4,12"
+                              Stroke="{StaticResource InkSecondary}" StrokeThickness="1.2"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource DangerSoft}" />
+                            <Setter TargetName="Icon" Property="Stroke" Value="{StaticResource Danger}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ThemedWindow" TargetType="Window">
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Background" Value="{StaticResource Canvas}" />
+        <Setter Property="services:WindowChromeBehavior.Enabled" Value="True" />
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="40" ResizeBorderThickness="6" CornerRadius="0"
+                              GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Window">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{StaticResource Line}" BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- 标题栏：樱花 + 窗口标题 + 三个按钮 -->
+                            <Border Grid.Row="0" Background="{StaticResource Surface}"
+                                    BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="14,0,0,0"
+                                                VerticalAlignment="Center">
+                                        <Image Source="{StaticResource SakuraLogo}" Width="17" Height="17"
+                                               Margin="0,0,9,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{TemplateBinding Title}" FontSize="12"
+                                                   FontWeight="SemiBold" Foreground="{StaticResource Ink}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Style="{StaticResource WindowBtn}"
+                                                Command="{x:Static SystemCommands.MinimizeWindowCommand}">
+                                            <Path Data="M4,8 H12" Stroke="{StaticResource InkSecondary}"
+                                                  StrokeThickness="1.2" StrokeStartLineCap="Round"
+                                                  StrokeEndLineCap="Round" />
+                                        </Button>
+                                        <Button Style="{StaticResource WindowMaxBtn}"
+                                                Command="{x:Static SystemCommands.MaximizeWindowCommand}">
+                                            <Path Data="M4,4 H12 V12 H4 Z" Stroke="Transparent" />
+                                        </Button>
+                                        <Button Style="{StaticResource WindowCloseBtn}"
+                                                Command="{x:Static SystemCommands.CloseWindowCommand}">
+                                            <Path Data="M4,4 L12,12" Stroke="Transparent" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <AdornerDecorator Grid.Row="1">
+                                <ContentPresenter />
+                            </AdornerDecorator>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

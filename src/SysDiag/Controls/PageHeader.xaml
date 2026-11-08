@@ -1,0 +1,12 @@
+<UserControl x:Class="SysDiag.Controls.PageHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             HorizontalContentAlignment="Stretch">
+    <!--  页面标题区：只有标题 + 可选徽章。不设副标题——页面要靠布局自解释，不靠一段说明。  -->
+    <StackPanel Orientation="Horizontal">
+        <TextBlock x:Name="TitleText" Style="{StaticResource PageTitle}" VerticalAlignment="Center" />
+        <Border x:Name="BadgeBox" Style="{StaticResource PageBadge}" Visibility="Collapsed">
+            <TextBlock x:Name="BadgeText" Style="{StaticResource PageBadgeText}" />
+        </Border>
+    </StackPanel>
+</UserControl>

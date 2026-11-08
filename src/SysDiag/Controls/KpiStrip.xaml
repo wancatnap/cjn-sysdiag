@@ -1,0 +1,21 @@
+<UserControl x:Class="SysDiag.Controls.KpiStrip"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  KPI 数字行：大号数字 + 小标签。颜色传 Palette 语义键，样式走 Theme 的 KpiNumber / KpiLabel。  -->
+    <ItemsControl x:Name="Host">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Style="{StaticResource KpiItem}">
+                    <TextBlock Text="{Binding Num}" Style="{StaticResource KpiNumber}"
+                               Foreground="{Binding Brush}" />
+                    <TextBlock Text="{Binding Label}" Style="{StaticResource KpiLabel}" />
+                </StackPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

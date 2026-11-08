@@ -1,0 +1,97 @@
+<Window x:Class="SysDiag.LiveOptimizerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="直播伴侣优化" Height="580" Width="840" MinHeight="500" MinWidth="760"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <StackPanel Grid.Row="0" Margin="24,20,24,12">
+            <TextBlock Text="直播伴侣优化" Style="{StaticResource PageTitle}" />
+        </StackPanel>
+
+        <!-- 指标 -->
+        <StackPanel Grid.Row="1" Margin="24,0,24,0">
+        <UniformGrid Columns="4">
+            <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10"
+                    Padding="14,12" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="CPU 总占用" FontSize="11" Foreground="{StaticResource InkTertiary}" />
+                    <TextBlock x:Name="CpuValue" Text="--" FontSize="18" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+            <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10"
+                    Padding="14,12" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="内存占用" FontSize="11" Foreground="{StaticResource InkTertiary}" />
+                    <TextBlock x:Name="MemValue" Text="--" FontSize="18" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+            <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10"
+                    Padding="14,12" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="CPU 温度" FontSize="11" Foreground="{StaticResource InkTertiary}" />
+                    <TextBlock x:Name="TempValue" Text="--" FontSize="18" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Border>
+            <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10"
+                    Padding="14,12">
+                <StackPanel>
+                    <TextBlock Text="直播伴侣" FontSize="11" Foreground="{StaticResource InkTertiary}" />
+                    <TextBlock x:Name="ProcValue" Text="--" FontSize="15" FontWeight="SemiBold"
+                               Foreground="{StaticResource InkSecondary}" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+            <!--  系统层状态：只读。提示放 ToolTip，不占版面。  -->
+            <TextBlock x:Name="DiagText" Text="" FontSize="10" Margin="2,10,0,0"
+                       Foreground="{StaticResource InkFaint}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <!-- 结果 -->
+        <Border Grid.Row="2" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1"
+                CornerRadius="10" Margin="24,12,24,0" Padding="14,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="优化记录" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{StaticResource InkSecondary}" Margin="0,0,0,8" />
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="LogText" Text="等待操作…" FontSize="11.5"
+                               FontFamily="Consolas" Foreground="{StaticResource InkSecondary}"
+                               TextWrapping="Wrap" LineHeight="19" />
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- 底部 -->
+        <Border Grid.Row="3" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0"
+                Padding="24,12" Margin="0,12,0,0">
+            <Grid>
+                <TextBlock x:Name="StatusText" Text="每 2 秒刷新一次" FontSize="11"
+                           Foreground="{StaticResource InkTertiary}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="关闭" Style="{StaticResource ToolButton}" Click="OnClose" />
+                    <Button Content="刷新" Style="{StaticResource ToolButton}" Click="OnRefresh" />
+                    <Button Content="还原" Style="{StaticResource ToolButton}" Click="OnRestore" />
+                    <Button Content="优化直播伴侣" Style="{StaticResource PrimaryButton}" Click="OnOptimize" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

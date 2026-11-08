@@ -1,0 +1,52 @@
+<Window x:Class="SysDiag.FeatureListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="功能一览" Height="760" Width="900" MinHeight="520" MinWidth="720"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader x:Name="Header" Grid.Row="0" Margin="24,20,24,8"
+                             Title="功能一览" Badge="全部功能" />
+
+        <Border Grid.Row="1" Margin="24,0,24,10" Padding="12,8" CornerRadius="8"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <TextBox x:Name="SearchBox" FontSize="11" BorderThickness="0" Background="Transparent"
+                         Foreground="{StaticResource Ink}" Padding="0"
+                         TextChanged="OnSearchChanged" />
+                <TextBlock x:Name="SearchHint" Text="搜索功能名或作用…" FontSize="11"
+                           Foreground="{StaticResource InkFaint}" IsHitTestVisible="False" Margin="2,0,0,0" />
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="2" Margin="24,0,24,0" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="Host" />
+        </ScrollViewer>
+
+        <Border Grid.Row="3" Margin="24,12,24,20" Padding="16,10" CornerRadius="10"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <TextBlock x:Name="FootText" FontSize="10.5" Foreground="{StaticResource InkSecondary}"
+                           VerticalAlignment="Center" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="LinkBtn" Content="在浏览器打开公告" Style="{StaticResource ToolButton}"
+                            Visibility="Collapsed" Click="OnOpenLink" />
+                    <Button Content="关闭" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0"
+                            MinWidth="84" Click="Close_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

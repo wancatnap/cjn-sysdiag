@@ -1,0 +1,67 @@
+<Window x:Class="SysDiag.OptimizationNotesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="优化推论" Height="800" Width="1080" MinHeight="600" MinWidth="920"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Margin="24,20,24,10"
+                             Title="优化推论" Badge="结论·前提·依据·限制" />
+
+        <Border Grid.Row="1" Margin="24,0,24,0" Padding="16,12" CornerRadius="10"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button x:Name="AllBtn" Content="全部" Style="{StaticResource ToolButton}" Click="OnFilterAll" />
+                    <Button x:Name="LatencyBtn" Content="延迟优化" Style="{StaticResource ToolButton}" Click="OnFilterLatency" />
+                    <Button x:Name="SystemBtn" Content="系统优化" Style="{StaticResource ToolButton}" Click="OnFilterSystem" />
+                    <Button x:Name="DebloatBtn" Content="免重装精简" Style="{StaticResource ToolButton}" Click="OnFilterDebloat" />
+                </StackPanel>
+
+                <TextBox x:Name="SearchBox" Grid.Column="1" Margin="16,0,0,0" Height="28"
+                         FontSize="10.5" VerticalContentAlignment="Center"
+                         TextChanged="OnSearchChanged"
+                         ToolTip="按标题、结论、前提、依据搜索" />
+
+                <TextBlock x:Name="CountText" Grid.Column="2" FontSize="10" Margin="12,0,0,0"
+                           Foreground="{StaticResource InkFaint}" VerticalAlignment="Center"
+                           Text="" />
+            </Grid>
+        </Border>
+
+        <!-- 三类功能域的判据 -->
+        <Border Grid.Row="2" Margin="24,10,24,0" Padding="14,10" CornerRadius="10"
+                Background="{StaticResource PrimarySoft}" BorderBrush="{StaticResource Primary}" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="三类功能怎么分" FontSize="11.5" FontWeight="SemiBold"
+                           Foreground="{StaticResource Primary}" />
+                <TextBlock x:Name="BoundaryText" FontSize="10" Foreground="{StaticResource InkSecondary}"
+                           TextWrapping="Wrap" LineHeight="16" Margin="0,5,0,0" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="3" Margin="24,12,24,0" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="NoteHost" Margin="0,0,4,8" />
+        </ScrollViewer>
+
+        <controls:BottomBar x:Name="Bar" Grid.Row="4" Margin="0,10,0,0" />
+    </Grid>
+</Window>

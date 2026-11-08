@@ -1,0 +1,66 @@
+<Window x:Class="SysDiag.HwidIntegrityWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="机器码伪造检测" Height="800" Width="1040" MinHeight="600" MinWidth="880"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Margin="24,20,24,10"
+                             Title="机器码伪造检测" Badge="不用登记 · 直接查" />
+
+        <!-- 结论 -->
+        <Border x:Name="StateBox" Grid.Row="1" Margin="24,0,24,0" Padding="16,14" CornerRadius="8"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Border x:Name="StateIcon" Grid.Column="0" Width="42" Height="42" CornerRadius="10"
+                        Background="{StaticResource SurfaceRaise}" BorderThickness="1"
+                        BorderBrush="{StaticResource Line}" Margin="0,0,14,0" VerticalAlignment="Top">
+                    <TextBlock x:Name="StateGlyph" Text="?" FontSize="20" FontWeight="SemiBold"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="{StaticResource InkFaint}" />
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock x:Name="StateTitle" Text="正在检测…" FontSize="13.5" FontWeight="SemiBold"
+                               Foreground="{StaticResource Ink}" />
+                    <TextBlock x:Name="StateDetail" Text="" FontSize="11" LineHeight="18"
+                               Foreground="{StaticResource InkTertiary}" Margin="0,5,10,0" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="RerunBtn" Content="重新检测" Style="{StaticResource ToolButton}" Click="OnRerun" />
+                    <Button x:Name="RawBtn" Content="原始标识符" Style="{StaticResource ToolButton}" Click="OnRawList" />
+                    <Button x:Name="ReportBtn" Content="生成报告" Style="{StaticResource PrimaryButton}" Click="OnReport" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 摘要 -->
+        <Border Grid.Row="2" Margin="24,12,24,0" Padding="16,13" CornerRadius="6"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <controls:KpiStrip x:Name="Kpi" VerticalAlignment="Center" />
+        </Border>
+
+        <!-- 检查项 -->
+        <controls:LogGridView x:Name="CheckGrid" Grid.Row="3" Margin="24,10,24,0" />
+
+        <controls:BottomBar x:Name="Bar" Grid.Row="4" Margin="0,4,0,0" />
+    </Grid>
+</Window>

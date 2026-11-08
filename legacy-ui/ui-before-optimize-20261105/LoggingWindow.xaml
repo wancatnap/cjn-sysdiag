@@ -1,0 +1,99 @@
+<Window x:Class="SysDiag.LoggingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="日志记录开关" Height="600" Width="860" MinHeight="460" MinWidth="760"
+        WindowStartupLocation="CenterOwner" Background="#F6F7F9"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <Grid Grid.Row="0" Margin="24,20,24,12">
+            <StackPanel>
+                <TextBlock Text="日志记录开关" FontSize="19" FontWeight="SemiBold" Foreground="#1F2937" />
+                <TextBlock Text="不少「优化」工具会顺手关掉日志记录，关掉之后就查不到痕迹了。这里可以把它们重新打开。"
+                           FontSize="11.5" Foreground="#868E96" Margin="0,6,0,0" TextWrapping="Wrap" />
+            </StackPanel>
+            <Button Content="刷新状态" Style="{StaticResource ToolButton}"
+                    HorizontalAlignment="Right" VerticalAlignment="Center" Click="OnRefresh" />
+        </Grid>
+
+        <!-- 开关列表 -->
+        <Grid Grid.Row="1" Margin="24,0,16,0">
+            <ListBox x:Name="List" BorderThickness="0" Background="Transparent"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0,0,0,8" />
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Background="#FFFFFF" CornerRadius="9"
+                                            BorderBrush="#E9ECEF" BorderThickness="1" Padding="14,12">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox Grid.Column="0" IsChecked="{Binding Wanted, Mode=TwoWay}"
+                                      VerticalAlignment="Center" Margin="0,0,12,0" />
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="#212529" />
+                                    <TextBlock Text="{Binding AdminText}" FontSize="10.5"
+                                               Foreground="{Binding AdminBrush}" Margin="10,2,0,0" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding Detail}" FontSize="10.5" Foreground="#868E96"
+                                           Margin="0,5,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <Border Grid.Column="2" Background="{Binding StateBg}" CornerRadius="20"
+                                    Padding="9,3" VerticalAlignment="Center" Margin="12,0,0,0">
+                                <TextBlock Text="{Binding StateText}" FontSize="11"
+                                           Foreground="{Binding StateBrush}" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!-- 底部 -->
+        <Border Grid.Row="2" Background="#FFFFFF" BorderBrush="#E9ECEF" BorderThickness="0,1,0,0"
+                Padding="24,12" Margin="0,10,0,0">
+            <Grid>
+                <TextBlock x:Name="StatusText" FontSize="11" Foreground="#868E96"
+                           VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="520"
+                           HorizontalAlignment="Left" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="关闭" Style="{StaticResource ToolButton}" Click="OnClose" />
+                    <Button x:Name="ApplyBtn" Content="应用更改" Style="{StaticResource PrimaryButton}"
+                            Click="OnApply" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

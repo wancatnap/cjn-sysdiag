@@ -1,0 +1,82 @@
+<Window x:Class="SysDiag.ToolListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="工具" Height="880" Width="1120" MinHeight="620" MinWidth="900"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader x:Name="Header" Grid.Row="0" Margin="24,20,24,10" />
+
+        <!-- KPI -->
+        <Border x:Name="KpiBox" Grid.Row="1" Margin="24,0,24,0" Padding="16,11" CornerRadius="6"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <controls:KpiStrip x:Name="Kpi" VerticalAlignment="Center" />
+        </Border>
+
+        <!-- 工具条 -->
+        <Grid Grid.Row="2" Margin="24,12,24,8">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="RefreshBtn" Content="刷新" Style="{StaticResource ToolButton}" Click="OnRefresh" />
+                <Button x:Name="ReportBtn" Content="生成报告" Style="{StaticResource ToolButton}" Click="OnReport" />
+                <CheckBox x:Name="AutoBox" Content="自动刷新" FontSize="10.5"
+                          VerticalAlignment="Center" Margin="12,0,0,0" Visibility="Collapsed"
+                          Checked="OnAutoChanged" Unchecked="OnAutoChanged" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock x:Name="Hint" FontSize="10.5" Foreground="{StaticResource InkTertiary}"
+                           VerticalAlignment="Center" Margin="0,0,10,0"
+                           TextTrimming="CharacterEllipsis" MaxWidth="400" />
+                <Button x:Name="NativeBtn" Content="在系统工具中打开" Style="{StaticResource ToolButton}"
+                        Click="OnNative" Visibility="Collapsed" />
+                <Button x:Name="ElevateBtn" Content="以管理员身份重启" Style="{StaticResource ToolButton}"
+                        Click="OnElevate" Visibility="Collapsed" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 统一表格：搜索 / 等级筛选 / 排序 / 时间柱状图都由它提供 -->
+        <controls:LogGridView x:Name="Grid" Grid.Row="3" Margin="24,2,24,0" />
+
+        <!-- 选中行详情 + 操作：点行才出现，避免「按钮对谁生效」看不出来 -->
+        <Border x:Name="DetailBox" Grid.Row="4" Margin="24,10,24,0" Padding="14,10" CornerRadius="6"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1"
+                Visibility="Collapsed">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Border x:Name="DetailStripe" Width="3" Height="12" CornerRadius="2"
+                                Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock x:Name="DetailTitle" FontSize="11.5" FontWeight="SemiBold"
+                                   Foreground="{StaticResource Ink}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <TextBlock x:Name="DetailText" FontSize="10.5" LineHeight="16"
+                               Foreground="{StaticResource InkTertiary}" TextWrapping="Wrap"
+                               Margin="0,5,0,0" MaxHeight="74" />
+                </StackPanel>
+
+                <WrapPanel x:Name="DetailActions" Grid.Column="1" Orientation="Horizontal"
+                           VerticalAlignment="Center" MaxWidth="560" />
+            </Grid>
+        </Border>
+
+        <controls:BottomBar x:Name="Bar" Grid.Row="5" Margin="0,4,0,0" />
+    </Grid>
+</Window>

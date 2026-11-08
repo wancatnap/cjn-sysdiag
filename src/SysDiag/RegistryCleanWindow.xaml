@@ -1,0 +1,102 @@
+<Window x:Class="SysDiag.RegistryCleanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="注册表清理" Height="840" Width="1040" MinHeight="620" MinWidth="880"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Margin="24,20,24,10"
+                             Title="注册表清理" Badge="只删孤儿项" />
+
+        <!-- 摘要 -->
+        <Border Grid.Row="1" Margin="24,0,24,0" Padding="16,13" CornerRadius="6"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <controls:KpiStrip x:Name="Kpi" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button x:Name="ScanBtn" Content="重新扫描" Style="{StaticResource ToolButton}" Click="OnRescan" />
+                    <Button x:Name="SafeBtn" Content="全选安全项" Style="{StaticResource ToolButton}" Click="OnSelectSafe" />
+                    <Button x:Name="ClearBtn" Content="清空选择" Style="{StaticResource ToolButton}" Click="OnClear" />
+                    <Button x:Name="CleanBtn" Content="备份并清理" Style="{StaticResource PrimaryButton}" Click="OnClean" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 备份提示 -->
+        <Border Grid.Row="2" Margin="24,10,24,0" Padding="14,10" CornerRadius="6"
+                Background="{StaticResource WarnSoft}" BorderBrush="{StaticResource Warn}" BorderThickness="1">
+            <TextBlock FontSize="10.5" Foreground="{StaticResource InkSecondary}" TextWrapping="Wrap" LineHeight="16">
+                删除前会自动用 <Run FontFamily="Consolas">reg export</Run> 把涉及的每个键整段导出到
+                <Run FontFamily="Consolas">outputs\reg-backup-时间戳\</Run>；某个键导出失败就跳过该键下的所有条目。
+                想回滚就双击那个目录里的 .reg 导入即可。
+            </TextBlock>
+        </Border>
+
+        <!-- 列表 -->
+        <ScrollViewer Grid.Row="3" Margin="24,10,16,0" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="0,0,8,8">
+                <ItemsControl x:Name="FindingList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}"
+                                    BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Selected, Mode=TwoWay}"
+                                              VerticalAlignment="Top" Margin="2,3,12,0" />
+
+                                    <StackPanel Grid.Column="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding DisplayName}" FontSize="12.5" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource Ink}" TextTrimming="CharacterEllipsis"
+                                                       MaxWidth="420" />
+                                            <Border Background="{StaticResource SurfaceRaise}" BorderBrush="{StaticResource Line}"
+                                                    BorderThickness="1" CornerRadius="3" Padding="6,0" Margin="8,1,0,0">
+                                                <TextBlock Text="{Binding Category}" FontSize="9"
+                                                           Foreground="{StaticResource InkFaint}" />
+                                            </Border>
+                                            <Border Background="Transparent" BorderBrush="{Binding LevelBrush}"
+                                                    BorderThickness="1" CornerRadius="3" Padding="6,0" Margin="6,1,0,0">
+                                                <TextBlock Text="{Binding LevelText}" FontSize="9"
+                                                           Foreground="{Binding LevelBrush}" />
+                                            </Border>
+                                        </StackPanel>
+
+                                        <TextBlock Text="{Binding Evidence}" FontSize="10.5"
+                                                   Foreground="{StaticResource InkTertiary}"
+                                                   Margin="0,5,12,0" TextWrapping="Wrap" LineHeight="15" />
+
+                                        <TextBlock Text="{Binding PathText}" FontSize="9.5" FontFamily="Consolas"
+                                                   Foreground="{StaticResource InkFaint}" Margin="0,4,0,0"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock x:Name="EmptyHint" Text="正在扫描注册表…" FontSize="11"
+                           Foreground="{StaticResource InkTertiary}" Margin="4,10,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <controls:BottomBar x:Name="Bar" Grid.Row="4" Margin="0,4,0,0" />
+    </Grid>
+</Window>

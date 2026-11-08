@@ -1,0 +1,54 @@
+<Window x:Class="SysDiag.ServiceRecoveryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="服务的失败恢复" Height="520" Width="600" MinHeight="440" MinWidth="520"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display" ShowInTaskbar="False">
+
+    <Grid Margin="20,16,20,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock x:Name="ServiceTitle" Text="服务" FontSize="15" FontWeight="SemiBold"
+                       Foreground="{StaticResource Ink}" TextTrimming="CharacterEllipsis" />
+            <TextBlock x:Name="CurrentText" FontSize="10.5" Foreground="{StaticResource InkTertiary}"
+                       Margin="0,6,0,0" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Padding="16,14" CornerRadius="8" Margin="0,0,0,10"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <StackPanel x:Name="OptionPanel">
+                <TextBlock Text="服务因为错误退出时，系统该怎么办" FontSize="11"
+                           Foreground="{StaticResource InkSecondary}" Margin="0,0,0,10" />
+
+                <RadioButton x:Name="NoneRadio" GroupName="Recovery" Content="不自动重启（清除恢复动作）"
+                             FontSize="11.5" Margin="0,0,0,9" />
+                <RadioButton x:Name="SlowRadio" GroupName="Recovery"
+                             Content="失败后自动重启：1 分钟 → 2 分钟 → 5 分钟" FontSize="11.5" Margin="0,0,0,9" />
+                <RadioButton x:Name="FastRadio" GroupName="Recovery"
+                             Content="失败后立即重启，之后 1 分钟 → 5 分钟" FontSize="11.5" />
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Padding="12,10" CornerRadius="6" Margin="0,0,0,10"
+                Background="{StaticResource WarnSoft}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <TextBlock FontSize="10" LineHeight="16" Foreground="{StaticResource InkTertiary}" TextWrapping="Wrap"
+                       Text="只对「服务自己异常退出」生效，手动停止不会触发。计数在 24 小时后归零，三段动作依次使用。部分服务（由系统组件托管、或设置了非零退出码策略）会拒绝修改。" />
+        </Border>
+
+        <TextBlock Grid.Row="3" x:Name="HintText" FontSize="10" Foreground="{StaticResource InkFaint}"
+                   TextWrapping="Wrap" VerticalAlignment="Top" />
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="CancelBtn" Content="取消" Style="{StaticResource ToolButton}" Click="OnCancel" />
+            <Button x:Name="ApplyBtn" Content="应用" Style="{StaticResource PrimaryButton}" Click="OnApply" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,30 @@
+# 构建产物
+bin/
+obj/
+dist-standalone/
+stage/
+stage-obf/
+.tmp-obf/
+.tmp-warmup/
+
+# 代码图谱（过程产物，只用于定位，不进版本库）
+graphify-out/
+
+# 本地回退备份（exe + 源码快照，体积大，不进版本库；回退点看 git tag pre-minimal-ui）
+backup/
+
+# 发布产物（67MB，不进版本库）
+*.exe
+*.old.exe
+
+# 运行时产物
+outputs/
+*.bmp
+
+# 杂项
+*.log
+false
+keys/
+
+# 图标是生成产物（tools/make-ico.py），不进版本库
+src/SysDiag/app.ico

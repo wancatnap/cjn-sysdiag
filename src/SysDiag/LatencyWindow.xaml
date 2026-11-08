@@ -1,0 +1,48 @@
+<Window x:Class="SysDiag.LatencyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:SysDiag.Controls"
+        Title="延迟优化" Height="780" Width="980" MinHeight="600" MinWidth="880"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource Canvas}"
+        FontFamily="Microsoft YaHei UI" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:PageHeader Grid.Row="0" Margin="24,20,24,10"
+                             Title="延迟优化" Badge="延迟优化域" />
+
+        <Border Grid.Row="1" Margin="24,0,24,0" Padding="16,12" CornerRadius="10"
+                Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="SummaryText" Grid.Column="0" FontSize="11.5" VerticalAlignment="Center"
+                           Foreground="{StaticResource InkSecondary}" TextTrimming="CharacterEllipsis"
+                           Text="正在检查…" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="ElevateBtn" Content="以管理员身份重启" Style="{StaticResource ToolButton}"
+                            Click="OnElevate" Visibility="Collapsed" />
+                    <Button Content="重新检查" Style="{StaticResource ToolButton}" Click="OnRescan" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="2" Margin="24,12,24,0" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="CheckHost" Margin="0,0,4,8" />
+        </ScrollViewer>
+
+        <controls:BottomBar x:Name="Bar" Grid.Row="3" Margin="0,4,0,0" />
+    </Grid>
+</Window>
