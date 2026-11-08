@@ -54,7 +54,7 @@ dist/SysDiag.exe --selftest
 ## 自检与布局体检
 
 - `--selftest`：496 项断言，覆盖每个功能的判定口径、确认框文案、恢复链路
-- `--layout-audit`：39 个窗口自动体检（元素越界 / 文本放不下），支持 `--screen=1366x728` 模拟小屏
+- `--layout-audit`：38 个窗口自动体检（元素越界 / 文本放不下），支持 `--screen=1366x728` 模拟小屏
 - `--notice-probe`：公告拉取与验签自证
 
 ## 文档
