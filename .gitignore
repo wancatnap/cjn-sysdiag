@@ -33,7 +33,8 @@ src/SysDiag/app.ico
 示例-*.png
 
 # 维护者私有：文档/存档/发布工具，不公开（本地保留）
-docs/
+docs/开发档案.md
+docs/方案-功能深化与报告导入.md
 分享前必读.md
 legacy-ui/
 发布公告.cmd

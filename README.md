@@ -4,6 +4,8 @@ Windows 诊断与优化工具：**诊断全程只读，改动能还原**。
 
 主界面 9 个分组、74 张功能卡片，全部在软件内完成，不调用 `msc` / `cpl` 等外部管理单元。
 
+<p align="center"><img src="docs/screenshot.png" width="720" alt="主界面" /></p>
+
 ## 功能分组
 
 | 分组 | 代表功能 |
