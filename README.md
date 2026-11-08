@@ -49,17 +49,11 @@ dotnet publish src/SysDiag/SysDiag.csproj -c Release -r win-x64 --self-contained
 dist/SysDiag.exe --selftest
 ```
 
-其余打包细节（字符串混淆、图标缺失时的行为）见 [`docs/开发档案.md`](docs/开发档案.md)。
-
 ## 自检与布局体检
 
 - `--selftest`：496 项断言，覆盖每个功能的判定口径、确认框文案、恢复链路
 - `--layout-audit`：38 个窗口自动体检（元素越界 / 文本放不下），支持 `--screen=1366x728` 模拟小屏
 - `--notice-probe`：公告拉取与验签自证
-
-## 文档
-
-完整的开发档案（每个功能的设计依据、踩过的坑、实测数据）在 [`docs/开发档案.md`](docs/开发档案.md)。
 
 ## 许可
 
