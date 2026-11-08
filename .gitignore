@@ -28,3 +28,6 @@ keys/
 
 # 图标是生成产物（tools/make-ico.py），不进版本库
 src/SysDiag/app.ico
+
+# 体检报告示例图含本机检测信息，不进版本库
+示例-*.png
